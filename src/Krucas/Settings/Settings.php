@@ -287,10 +287,10 @@ class Settings implements Repository
      */
     public function has($key)
     {
-        $this->fire('checking', $key, [$key]);
+        $this->dispatch('checking', $key, [$key]);
 
         $status = $this->repository->has($this->getKey($key));
-        $this->fire('has', $key, [$key, $status]);
+        $this->dispatch('has', $key, [$key, $status]);
 
         $this->context(null);
 
@@ -306,7 +306,7 @@ class Settings implements Repository
      */
     public function get($key, $default = null)
     {
-        $this->fire('getting', $key, [$key, $default]);
+        $this->dispatch('getting', $key, [$key, $default]);
 
         $generatedKey = $this->getKey($key);
 
@@ -326,7 +326,7 @@ class Settings implements Repository
             $value = $default;
         }
 
-        $this->fire('get', $key, [$key, $value, $default]);
+        $this->dispatch('get', $key, [$key, $value, $default]);
 
         $this->context(null);
 
@@ -342,7 +342,7 @@ class Settings implements Repository
      */
     public function set($key, $value = null)
     {
-        $this->fire('setting', $key, [$key, $value]);
+        $this->dispatch('setting', $key, [$key, $value]);
 
         $generatedKey = $this->getKey($key);
 
@@ -357,7 +357,7 @@ class Settings implements Repository
             $this->cache->forget($generatedKey);
         }
 
-        $this->fire('set', $key, [$key, $value]);
+        $this->dispatch('set', $key, [$key, $value]);
 
         $this->context(null);
     }
@@ -370,7 +370,7 @@ class Settings implements Repository
      */
     public function forget($key)
     {
-        $this->fire('forgetting', $key, [$key]);
+        $this->dispatch('forgetting', $key, [$key]);
 
         $generatedKey = $this->getKey($key);
 
@@ -380,7 +380,7 @@ class Settings implements Repository
             $this->cache->forget($generatedKey);
         }
 
-        $this->fire('forget', $key, [$key]);
+        $this->dispatch('forget', $key, [$key]);
 
         $this->context(null);
     }
@@ -425,7 +425,7 @@ class Settings implements Repository
      * @param string $key
      * @param array $payload
      */
-    protected function fire($event, $key, array $payload = [])
+    protected function dispatch($event, $key, array $payload = [])
     {
         $payload[] = $this->context;
 
